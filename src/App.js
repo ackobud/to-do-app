@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router";
+import "./App.css";
+import Login from "./Pages/Login";
+import Navigation from "./Partials/Navigations";
+import { createContext, useReducer } from "react";
+import { getUsersInitialData, userReducer } from "./Reducers/User";
 
-function App() {
+export const UserContext = createContext();
+
+export default function App() {
+  const [userState, userDispatch] = useReducer(
+    userReducer,
+    getUsersInitialData
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <UserContext.Provider value={{ userState, userDispatch }}>
+        <Navigation />
+        <Routes>
+          <Route path="/login" element={<Login />}></Route>
+        </Routes>
+      </UserContext.Provider>
+    </BrowserRouter>
   );
 }
-
-export default App;
